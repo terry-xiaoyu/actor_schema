@@ -15,6 +15,7 @@ The basic syntax is inspired by the [OpenAPI](https://github.com/OAI/OpenAPI-Spe
 ## Data Types
 
 Supported data types are the same as the [Data Types supported by OpenAPI](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#dataTypes):
+
 [`type`](#dataTypes) | [`format`](#dataTypeFormat) | Comments
 ------ | -------- | --------
 `integer` | `int32` | signed 32 bits
