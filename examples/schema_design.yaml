@@ -1,0 +1,151 @@
+actor_schema: "0.1.0"
+
+info:
+  description: "Schema for my device"
+  version: "1.0.0"
+
+tanent_id: 001
+
+product_id: 001
+
+protocol: lwm2m
+
+events:
+  topics:
+    /19/0/0:
+      description: "event reports from devices"
+      schema:
+        type: array
+        items:
+          oneOf:
+            - $ref: "#/components/schemas/EventTemperature"
+            - $ref: "#/components/schemas/EventHumidity"
+
+requests:
+  topics:
+    /19/1/0:
+      schema:
+        $ref: "#/components/schemas/GetRequest"
+
+responses:
+  topics:
+    /19/0/0:
+      schema:
+        oneOf:
+          - $ref: "#/components/schemas/StatusResult"
+          - $ref: "#/components/schemas/TemperatureResult"
+          - $ref: "#/components/schemas/HumidityResult"
+
+components:
+  schemas:
+    EventTemperature:
+      description: "the temperature of the local sensor"
+      type: "object"
+      properties:
+        temperature:
+          - $ref: "#/components/schemas/Temperature"
+
+    EventHumidity:
+      description: "the humidity of the local sensor"
+      type: "object"
+      properties:
+        humidity:
+          - $ref: "#/components/schemas/Temperature"
+
+    GetRequest:
+      description: "get device status"
+      type: "object"
+      properties:
+        request_type:
+          type: "string"
+          enum:
+            - "get_device_status"
+            - "get_temperature"
+            - "get_humidity"
+        request_id:
+          description: "request id used to match the response to the request"
+          required: true
+          type: "integer"
+        parameters:
+          type: array
+          items: {} # parameter array can be arbitrary type
+
+    StatusResult:
+      description: "device status result"
+      type: "object"
+      properties:
+        request_id:
+          type: "integer"
+        result:
+          type: object
+          properties:
+            result_code:
+              - $ref: "#/components/schemas/ResultCode"
+            is_working:
+              type: "bool"
+
+    TemperatureResult:
+      type: "object"
+      properties:
+        request_id:
+          type: "integer"
+        result:
+          type: object
+          properties:
+            result_code:
+              - $ref: "#/components/schemas/ResultCode"
+            temperature:
+              - $ref: "#/components/schemas/Temperature"
+
+    HumidityResult:
+      type: "object"
+      properties:
+        request_id:
+          type: "integer"
+        result:
+          type: object
+          properties:
+            result_code:
+              - $ref: "#/components/schemas/ResultCode"
+            humidity:
+              - $ref: "#/components/schemas/Humidity"
+
+    ResultCode:
+      type: "string"
+      description: "result string"
+      enum:
+        - "ok"
+        - "error"
+        - "pending"
+
+    Temperature:
+      type: "object"
+      properties:
+        time:
+          type: "string"
+          format: "datatime"
+          required: true
+        value:
+          type: "integer"
+          required: true
+          range:
+            min: -23
+            max: 79
+          unit: "˚C"
+          unitName: "Celsius Degree"
+
+    Humidity:
+      type: "object"
+      properties:
+        time:
+          type: "string"
+          format: "datatime"
+          required: true
+        value:
+          type: "integer"
+          required: true
+          range:
+            min: 0
+            max: 100
+          unit: "%rh"
+          unitName: "Relative Humidity"
