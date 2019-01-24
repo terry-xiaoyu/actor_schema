@@ -1,6 +1,6 @@
 # Data examples
 
-This file contains some data examples that complied with the schema_design.yaml
+This file contains some data examples that complies with the schema_design.yaml
 
 ## event examples
 
@@ -10,10 +10,7 @@ This file contains some data examples that complied with the schema_design.yaml
 {
   "data_type": "events",
   "data": [
-    "temperature": {
-      "time": 1547660823,
-      "value": -3.7
-    }
+    {"temperature": {"time": 1547660823, "value": -3.7}}
   ]
 }
 ```
@@ -23,10 +20,7 @@ This file contains some data examples that complied with the schema_design.yaml
 ```json
 { "data_type": "events",
   "data": [
-    "humidity": {
-      "time": 1547661822,
-      "value": 100
-    }
+    {"humidity": {"time": 1547661822, "value": 100}}
   ]
 }
 ```
@@ -37,14 +31,8 @@ This file contains some data examples that complied with the schema_design.yaml
 {
   "data_type": "events",
   "data": [
-    "humidity": {
-      "time": 1547661822,
-      "value": 100
-    },
-    "temperature": {
-      "time": 1547660823,
-      "value": -3.7
-    }
+    {"humidity": {"time": 1547661822, "value": 100}},
+    {"temperature": {"time": 1547661822, "value": -3.7}}
   ]
 }
 ```
@@ -72,7 +60,7 @@ This file contains some data examples that complied with the schema_design.yaml
   "data": {
     "request_type": "get_temperature",
     "request_id": 2,
-    "parameters": ["sensor_id": 0]
+    "parameters": [{"sensor_id": 0}]
   }
 }
 ```
@@ -85,7 +73,7 @@ This file contains some data examples that complied with the schema_design.yaml
   "data": {
     "request_type": "get_humidity",
     "request_id": 3,
-    "parameters": ["sensor_id": 0]
+    "parameters": [{"sensor_id": 0}]
   }
 }
 ```

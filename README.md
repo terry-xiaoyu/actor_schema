@@ -29,3 +29,11 @@ Supported data types are the same as the [Data Types supported by OpenAPI](https
 `string` | `date` | As defined by `full-date` - [RFC3339](https://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14)
 `string` | `date-time` | As defined by `date-time` - [RFC3339](https://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14)
 `string` | `password` | A hint to UIs to obscure input.
+
+## Translators
+
+If the messages that the devices use are not comply to the data structures defined in the schema file, we could write `translators` to decode/encode between ActorCloud and devices.
+
+Translator is a python module contains callbacks for decoding the events/responses from the device as well as encoding the requests to the device.
+
+An example translator is provided in `examples/translator.py`.
