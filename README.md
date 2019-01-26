@@ -4,12 +4,6 @@ Schema design for Actor Cloud.
 
 Actor schema is a specification doc for defining the data structures used in IoT device management procedures.
 
-The main 3 data types are:
-
-- events: the event reports come from the devices
-- requests: the requests (or commands) sent from IoT platform to the devices
-- responses: the responses replied by the clients
-
 The basic syntax is inspired by the [OpenAPI](https://github.com/OAI/OpenAPI-Specification).
 
 ## Data Types

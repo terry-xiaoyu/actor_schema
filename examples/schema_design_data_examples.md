@@ -88,7 +88,8 @@ This file contains some data examples that complies with the schema_design.yaml
   "data": {
     "request_id": 1,
     "result": {
-      "result_code": "ok",
+      "code": 0,
+      "msg": "ok",
       "is_working": true
     }
   }
@@ -103,7 +104,8 @@ This file contains some data examples that complies with the schema_design.yaml
   "data": {
     "request_id": 2,
     "result": {
-      "result_code": "ok",
+      "code": 0,
+      "msg": "ok",
       "temperature": {
         "time": 1547660823,
         "value": -3.7
@@ -121,7 +123,8 @@ This file contains some data examples that complies with the schema_design.yaml
   "data": {
     "request_id": 3,
     "result": {
-      "result_code": "ok",
+      "code": 0,
+      "msg": "ok",
       "humidity": {
         "time": 1547661822,
         "value": 100
