@@ -11,12 +11,12 @@ The callback functions must be exported in this module are:
   message to the `normative` format according to the schema file.
 
   Args:
-      topic (str): The topic of this message.
+      topic (bytes): The topic of this message.
       message (bytes): The payload of the message.
   Returns:
       Tuple: (status_code, result)
              `status_code`: integer, 0 - OK, 1 - ERROR.
-             `result`: bytes, a JSON string that complies with the data structures
+             `result`: bytes, a JSON string bytes that complies with the data structures
                        defined in the schema file.
 
 - encode(topic, message):
@@ -24,8 +24,8 @@ The callback functions must be exported in this module are:
   to encode the message to the format that the client requires.
 
   Args:
-      topic (str): The topic of this message.
-      message (str): The payload of the message, this message is of the format
+      topic (bytes): The topic of this message.
+      message (bytes): The payload of the message, this message is of the format
                      defined in the schema file.
   Returns:
       Tuple: (status_code, result)
@@ -105,20 +105,20 @@ is also of JSON format, but doesn't comply with the schema file:
 def decode(topic, message):
   """Decode the messages according to the schema
 
-  >>> decode('/19/0/0', '[{"tmp": {"ts": 1547660823, "v": -3.7}}, {"hmd": {"ts": 1547660823, "v": 34}}]')
-  (0, '{"data_type": "events", "data": [{"temperature": {"time": 1547660823, "value": -3.7}}, {"humidity": {"time": 1547660823, "value": 34}}]}')
+  >>> decode(b'/19/0/0', b'[{"tmp": {"ts": 1547660823, "v": -3.7}}, {"hmd": {"ts": 1547660823, "v": 34}}]')
+  (0, b'{"data_type": "events", "data": [{"temperature": {"time": 1547660823, "value": -3.7}}, {"humidity": {"time": 1547660823, "value": 34}}]}')
 
-  >>> decode('/19/0/0', '{"req_id": 1, "code": 0, "st": 1}')
-  (0, '{"data_type": "responses", "data": {"request_id": 1, "result": {"code": 0, "msg": "ok", "is_working": true}}}')
+  >>> decode(b'/19/0/0', b'{"req_id": 1, "code": 0, "st": 1}')
+  (0, b'{"data_type": "responses", "data": {"request_id": 1, "result": {"code": 0, "msg": "ok", "is_working": true}}}')
 
-  >>> decode('/19/0/0', '{"req_id": 2, "code": 0, "tmp": {"ts": 1547660823, "v": -3.7}}')
-  (0, '{"data_type": "responses", "data": {"request_id": 2, "result": {"code": 0, "msg": "ok", "temperature": {"time": 1547660823, "value": -3.7}}}}')
+  >>> decode(b'/19/0/0', b'{"req_id": 2, "code": 0, "tmp": {"ts": 1547660823, "v": -3.7}}')
+  (0, b'{"data_type": "responses", "data": {"request_id": 2, "result": {"code": 0, "msg": "ok", "temperature": {"time": 1547660823, "value": -3.7}}}}')
 
-  >>> decode('/19/0/0', '{"req_id": 3, "code": 0, "hmd": {"ts": 1547660823, "v": 34}}')
-  (0, '{"data_type": "responses", "data": {"request_id": 3, "result": {"code": 0, "msg": "ok", "humidity": {"time": 1547660823, "value": 34}}}}')
+  >>> decode(b'/19/0/0', b'{"req_id": 3, "code": 0, "hmd": {"ts": 1547660823, "v": 34}}')
+  (0, b'{"data_type": "responses", "data": {"request_id": 3, "result": {"code": 0, "msg": "ok", "humidity": {"time": 1547660823, "value": 34}}}}')
   """
 
-  if topic == '/19/0/0':
+  if topic == b'/19/0/0':
     try:
       raw_json = json.loads(message)
       if type(raw_json) == list:
@@ -127,9 +127,9 @@ def decode(topic, message):
         return decode_responses(raw_json)
     except Exception:
       print("decode error:",)
-      return (ERROR, "decode error({0}): {1}".format(sys.exc_info()[0], sys.exc_info()[1]))
+      return (ERROR, "decode error({0}): {1}".format(sys.exc_info()[0], sys.exc_info()[1]).encode(encoding='UTF-8'))
   else:
-    return (ERROR, 'decode error: incorrect_topic')
+    return (ERROR, 'decode error, incorrect_topic: {0}'.format(topic).encode(encoding='UTF-8'))
 
 """
 If the format of requests defined by the schema does not conform to the ones that
@@ -153,25 +153,25 @@ But the request format that defined in the `schema_design.yaml` is:
 def encode(topic, message):
   """Encode the messages that are going to be sent to devices according to the schema
 
-  >>> encode('/19/1/0', '{"data_type": "requests", "data": {"request_type": "get_device_status","request_id": 1,"parameters": []}}')
-  (0, '{"cmd": "get", "req_id": 1, "res": "st"}')
+  >>> encode(b'/19/1/0', b'{"data_type": "requests", "data": {"request_type": "get_device_status","request_id": 1,"parameters": []}}')
+  (0, b'{"cmd": "get", "req_id": 1, "res": "st"}')
 
-  >>> encode('/19/1/0', '{"data_type": "requests", "data": {"request_type": "get_temperature","request_id": 2,"parameters": [{"sensor_id": 0}]}}')
-  (0, '{"cmd": "get", "req_id": 2, "res": "tmp", "params": [{"sensor_id": 0}]}')
+  >>> encode(b'/19/1/0', b'{"data_type": "requests", "data": {"request_type": "get_temperature","request_id": 2,"parameters": [{"sensor_id": 0}]}}')
+  (0, b'{"cmd": "get", "req_id": 2, "res": "tmp", "params": [{"sensor_id": 0}]}')
 
-  >>> encode('/19/1/0', '{"data_type": "requests", "data": {"request_type": "get_humidity","request_id": 3,"parameters": [{"sensor_id": 2}]}}')
-  (0, '{"cmd": "get", "req_id": 3, "res": "hmd", "params": [{"sensor_id": 2}]}')
+  >>> encode(b'/19/1/0', b'{"data_type": "requests", "data": {"request_type": "get_humidity","request_id": 3,"parameters": [{"sensor_id": 2}]}}')
+  (0, b'{"cmd": "get", "req_id": 3, "res": "hmd", "params": [{"sensor_id": 2}]}')
   """
 
-  if topic == '/19/1/0':
+  if topic == b'/19/1/0':
     try:
       raw_json = json.loads(message)
       return encode_request(raw_json)
     except Exception:
-      print("decode error:",)
-      return (ERROR, "decode error({0}): {1}".format(sys.exc_info()[0], sys.exc_info()[1]))
+      print("encode error:",)
+      return (ERROR, "encode error({0}): {1}".format(sys.exc_info()[0], sys.exc_info()[1]).encode(encoding='UTF-8'))
   else:
-    return (ERROR, 'decode error: incorrect_topic')
+    return (ERROR, 'encode error, incorrect_topic: {0}'.format(topic).encode(encoding='UTF-8'))
 
 ############################################################
 ## Helper functions
@@ -180,19 +180,19 @@ def decode_events(events):
   ## translate the raw message
   data = list(map(trans_data, events))
   ## add 'data_type' and wrap the data with 'data' dict
-  return (OK, json.dumps({'data_type': 'events', 'data': data}))
+  return (OK, json.dumps({'data_type': 'events', 'data': data}).encode(encoding='UTF-8'))
 
 def decode_responses(response):
   req_id = response['req_id']
   resp = trans_data(response)
   result = None
   if None == resp:
-    result = {'code': response['code'], "msg": "unsupported response: "+str(response)}
+    result = {'code': response['code'], "msg": "unsupported response: "+bytes(response)}
   else:
     result = {'code': response['code'],
               'msg': result_msg(response['code']), **resp}
   data = {'request_id': req_id, 'result': result}
-  return (OK, json.dumps({'data_type': 'responses', 'data': data}))
+  return (OK, json.dumps({'data_type': 'responses', 'data': data}).encode(encoding='UTF-8'))
 
 def trans_data(data):
   if 'tmp' in data:
@@ -209,9 +209,10 @@ def encode_request(request):
     data = request['data']
     req_base = {'cmd': "get", 'req_id': data['request_id'], 'res': res(data['request_type'])}
     p = params(data)
-    return (OK, json.dumps(req_base)) if p == [] else (OK, json.dumps({**req_base, 'params': p}))
-  else:
-    return (ERROR, 'encode error: not a request - {0}'.format(request['data_type']))
+    if p == []:
+      return (OK, json.dumps(req_base).encode(encoding='UTF-8'))
+    return (OK, json.dumps({**req_base, 'params': p}).encode(encoding='UTF-8'))
+  return (ERROR, 'encode error, not a request: {0}'.format(request['data_type']).encode(encoding='UTF-8'))
 
 def params(data):
   return data['parameters'] if 'parameters' in data else []
