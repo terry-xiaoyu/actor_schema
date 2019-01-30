@@ -1,6 +1,6 @@
 # Data examples
 
-This file contains some data examples that complies with the schema_design.yaml
+This file contains some data examples that complies with the schema_example.yaml
 
 ## event examples
 

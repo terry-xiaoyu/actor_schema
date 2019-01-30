@@ -59,8 +59,8 @@ is also of JSON format, but doesn't comply with the schema file:
     HumidityResult:
       {"req_id": 3, "code": 0, "hmd": {"ts": 1547660823, "v": 34}}
 
-  We need to translate theses messages to right format according to the `schema_design.yaml`.
-  See the `events` and `responses` sections in `schema_design.yaml`:
+  We need to translate theses messages to right format according to the `schema_example.yaml`.
+  See the `events` and `responses` sections in `schema_example.yaml`:
 
   Then our result message after decoding should be:
 
@@ -140,7 +140,7 @@ JSON format:
 
 {"cmd": CmdType(string), "req_id": ReqId(integer), "res": ResourceName(string)}
 
-But the request format that defined in the `schema_design.yaml` is:
+But the request format that defined in the `schema_example.yaml` is:
 
 { "data_type": "requests",
   "data": {
